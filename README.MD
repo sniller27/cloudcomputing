@@ -1,7 +1,15 @@
 This is cloud computing project make in Node.js, Express and Socket.io
 
-# Procedure
+# Setup
 
-install dependencies: npm install
+### Install NPM dependencies
 
-run server: node server.js
+```
+$ npm install
+```
+
+### Run Node server
+
+```
+$ node server.js
+```
