@@ -1,5 +1,7 @@
-This is cloud computing project make in Node.js and Socket.io
+This is cloud computing project make in Node.js, Express and Socket.io
 
-#Procedure
+# Procedure
+
 install dependencies: npm install
+
 run server: node server.js

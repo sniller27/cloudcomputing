@@ -18,5 +18,13 @@
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
+  
+  <!-- load socket.io client and scripts..."exposes a io global, and then connect" -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  //no URL specified since it defaults to trying to connect to the host that serves the page
+    var socket = io();
+  </script>
+
   </body>
 </html>
