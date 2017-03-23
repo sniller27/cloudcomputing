@@ -1,5 +1,4 @@
-//modules
-
+//MODULES
 //express module. initializes app as function handler.
 var app = require('express')();
 var http = require('http').Server(app);
@@ -15,14 +14,19 @@ app.get('/', function(req, res){
 
 //socket.io listens on the connection event for incoming sockets...executes when server receives request
 io.on('connection', function(socket){
-  console.log('a user connected');
 
-  //prints message in console when user is disconnected
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
+	console.log('a user connected');
+
+	//"redirects" users input to console
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
   });
-});
 
+  //prints message in console when user is disconnecting
+  // socket.on('disconnect', function(){
+  //   console.log('user disconnected');
+  // });
+});
 
 //http server listen on port 3000
 http.listen(3000, function(){

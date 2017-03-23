@@ -21,10 +21,18 @@
   
   <!-- load socket.io client and scripts..."exposes a io global, and then connect" -->
   <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
-  //no URL specified since it defaults to trying to connect to the host that serves the page
-    var socket = io();
-  </script>
+    $(function () {
+  //no URL in io() specified, since it defaults to trying to connect to the host that serves the page
+      var socket = io();
 
-  </body>
+  //emit on submit
+      $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+    });
+  </script>
 </html>
