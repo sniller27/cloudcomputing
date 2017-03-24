@@ -1,4 +1,4 @@
-This is cloud computing project make in Node.js, Express and Socket.io
+This is cloud computing project is made in Node.js, Express and Socket.io
 
 # Setup
 

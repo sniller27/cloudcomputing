@@ -5,17 +5,22 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #sendmessageform { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      #sendmessageform input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      #sendmessageform button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
     </style>
   </head>
   <body>
+  <form action="" id="connectnameform">
+    <input type="text" name="chatname" id="chatname">
+    <button id="setchatname" type="submit">ok</button>
+  </form>
+
     <ul id="messages"></ul>
-    <form action="">
+    <form action="" id="sendmessageform">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
   
@@ -27,12 +32,33 @@
   //no URL in io() specified, since it defaults to trying to connect to the host that serves the page
       var socket = io();
 
-  //emit on submit
-      $('form').submit(function(){
+      //user connect
+      $('#connectnameform').submit(function(){
+        socket.emit('user connected', $('#chatname').val());
+        $(':input[type="submit"]').prop('disabled', true);
+        $(':input[type="text"]').prop('disabled', true);
+        return false;
+      });
+
+      //submit textmessage
+      $('#sendmessageform').submit(function(){
         socket.emit('chat message', $('#m').val());
         $('#m').val('');
         return false;
       });
+
+      //append textmessage to chat
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+
+      //append textmessage to chat
+      socket.on('user connected', function(msg){
+        $('#messages').append($('<li>').text('kokoko'));
+      });
+      
+
+
     });
   </script>
 </html>
