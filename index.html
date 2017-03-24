@@ -29,6 +29,10 @@
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
     $(function () {
+
+      //autofocus register
+      $("#chatname").focus();
+
   //no URL in io() specified, since it defaults to trying to connect to the host that serves the page
       var socket = io();
 
@@ -37,12 +41,19 @@
         socket.emit('user register', $('#chatname').val());
         $(':input[type="submit"]').prop('disabled', true);
         $(':input[type="text"]').prop('disabled', true);
+        $("#messagebutton").focus();
         return false;
       });
 
       //submit textmessage
       $('#sendmessageform').submit(function(){
-        socket.emit('userinput', $('#messagebutton').val());
+
+        if ($('#messagebutton').val() === '\\list') {
+          alert('nooo');
+        }else {
+          socket.emit('userinput', $('#messagebutton').val());
+        }
+
         $('#messagebutton').val('');
         return false;
       });

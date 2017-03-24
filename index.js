@@ -28,7 +28,7 @@ io.on('connection', function(socket){
 
     //prints on website
     io.emit('chat message', socket.username + ' has joined the chat.');
-    io.emit('get users', users);
+    //io.emit('get users', users);
   	});
 
 	//prints message in console when user is disconnecting
@@ -36,8 +36,11 @@ io.on('connection', function(socket){
 		//deregister user
 		//clients.splice(clients.indexOf(client), 1);
 		//feedback
-		io.emit('chat message', '[John] has left the chat.');
+		users.splice(users.indexOf(socket.username), 1);
 		connections.splice(connections.indexOf(socket), 1);
+		
+		io.emit('chat message', socket.username + ' has left the chat.');
+
 		console.log('number of connections: ' + connections.length);
 	});
 
@@ -51,7 +54,8 @@ io.on('connection', function(socket){
     //prints on website
     //io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [John]: '  + msg);
     
-    io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [John]: '  + msg);
+    io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: '  + msg);
+
   });
 
 
