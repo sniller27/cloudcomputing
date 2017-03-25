@@ -6,7 +6,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 //lists
-var users = [];
+// var users = [];
+var users = {};
 var connections = [];
 
 //route handler "/" is called when we go to URL
@@ -19,10 +20,16 @@ app.get('/', function(req, res){
 //socket.io listens on the connection event for incoming sockets...executes when server receives request
 io.on('connection', function(socket){
 
-	socket.on('user register', function(msg){
-	socket.username = msg;
+	socket.on('user register', function(name){
+
+		if(name in users){
+			console.log('eksiterer allerede');
+		}
+
+	socket.username = name;
 	connections.push(socket);
-	users.push(socket.username);
+	//users.push(socket.username);
+	users[socket.username] = socket;
 
 	console.log('number of connections: ' + connections.length);
 
@@ -36,7 +43,8 @@ io.on('connection', function(socket){
 		//deregister user
 		//clients.splice(clients.indexOf(client), 1);
 		//feedback
-		users.splice(users.indexOf(socket.username), 1);
+		// users.splice(users.indexOf(socket.username), 1);
+		delete users[socket.username];
 		connections.splice(connections.indexOf(socket), 1);
 		
 		io.emit('chat message', socket.username + ' has left the chat.');
@@ -53,8 +61,32 @@ io.on('connection', function(socket){
 
     //prints on website
     //io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [John]: '  + msg);
-    
-    io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: '  + msg);
+    var whisper = msg.substring(0, 3);
+    if (whisper === "/w ") {
+    	msg = msg.substring(3);
+    	var spaceindex = msg.indexOf(" ");
+
+    	if (spaceindex !== -1) {
+    		var receiver = msg.substring(0,spaceindex);
+    		msg = msg.substring(spaceindex + 1);
+    		console.log('modtager: ' + receiver);
+    		console.log('besked: ' + msg);
+
+    		if(receiver in users){
+    			//console.log('godkendt bruger');
+    			//io.emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
+    			users[receiver].emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
+    			users[socket.username].emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
+    			//socket.to(socket.username).emit('hey', 'I just met you');
+    		}
+
+    	}else{
+    		console.log('wrong syntax');
+    	}
+    }else{
+    	io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: '  + msg);
+    }
+
 
   });
 
