@@ -11,6 +11,13 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+
+      .green {
+        color: green;
+      }
+      .red {
+        color: red;
+      }
     </style>
   </head>
   <body>
@@ -47,12 +54,10 @@
 
       //submit textmessage
       $('#sendmessageform').submit(function(){
-
-        if ($('#messagebutton').val() === '\\list') {
-          alert('nooo');
-        }else {
-          socket.emit('userinput', $('#messagebutton').val());
-        }
+   
+          socket.emit('userinput', $('#messagebutton').val(), function(data){
+            $('#messages').append($('<li class="red">').text(data));
+          });
 
         $('#messagebutton').val('');
         return false;
@@ -64,21 +69,19 @@
       });
 
       //whisper
-      socket.on('whisper', function(){
-        
+      socket.on('whisper', function(msg){
+        $('#messages').append($('<li class="green">').text(msg));
       });
-
-      //append textmessage to chat
-      // socket.on('user register', function(msg){
-      //   $('#messages').append($('<li>').text('kokoko'));
-      // });
 
       //getting users list
       socket.on('get users', function(userlist){
         var allusers;
+        allusers = '<li>----- Online users -----</li>';
+
         for(i = 0; i < userlist.length;i++){
           allusers += '<li>' + userlist[i] + '</li>';
         }
+        allusers += '<li>-----------------------------</li>';
 
         //appends all at once
         $('#messages').append(allusers);

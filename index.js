@@ -53,13 +53,7 @@ io.on('connection', function(socket){
 	});
 
 
-	//console.log('a user connected');
-
-  socket.on('userinput', function(msg){
-	//"redirects" users input to console
-    //console.log('message: ' + msg);
-
-    //prints on website
+  socket.on('userinput', function(msg, callback){
     //io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [John]: '  + msg);
     var whisper = msg.substring(0, 3);
     if (whisper === "/w ") {
@@ -69,20 +63,36 @@ io.on('connection', function(socket){
     	if (spaceindex !== -1) {
     		var receiver = msg.substring(0,spaceindex);
     		msg = msg.substring(spaceindex + 1);
-    		console.log('modtager: ' + receiver);
-    		console.log('besked: ' + msg);
 
     		if(receiver in users){
-    			//console.log('godkendt bruger');
     			//io.emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
-    			users[receiver].emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
-    			users[socket.username].emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
+    			users[receiver].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
+    			users[socket.username].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
     			//socket.to(socket.username).emit('hey', 'I just met you');
+    		}else {
+    			callback('user doesn\'t exist');
     		}
 
     	}else{
-    		console.log('wrong syntax');
+    		callback('wrong syntax');
     	}
+    }else if(msg === '\\list'){
+
+    	// users.forEach(function(client, index) {
+     //        var client_id = index; // Just use the index in the clients array for now
+     //        getListings(client_id, function(listings) {
+     //            socket.emit('get users', listings);   // send jobs
+     //        });
+     //    });
+
+    	// console.log("her er " + users[socket.username]);
+
+    	//make array in order to only send nescessary information to user instead of object(?)
+    	var userlist = [];
+    	for (var key in users) {
+		    userlist.push(users[key].username);
+		}
+    	users[socket.username].emit('get users', userlist);
     }else{
     	io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: '  + msg);
     }
