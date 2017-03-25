@@ -1,0 +1,5 @@
+---
+applications:
+ - name: chatclient
+   random-route: true
+   memory: 256M

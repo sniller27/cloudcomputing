@@ -1,6 +1,6 @@
-This is cloud computing project is made in Node.js, Express and Socket.io
+This is chat client made in is made in Node.js, Express and Socket.io. The chat client allows you to join the chat, send messages, send private messages and see a list of online users.
 
-# Setup
+# Installation guide
 
 ### Install NPM dependencies
 
@@ -13,3 +13,5 @@ $ npm install
 ```
 $ node server.js
 ```
+
+An example of the chat client can be found here: https://chatclient.eu-gb.mybluemix.net/
