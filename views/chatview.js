@@ -12,11 +12,19 @@ $(function () {
 
   //user connects to chat
   $('#connectnameform').submit(function(){
-    $('#myModal').modal('hide');
+
+    var samename;
+    
     socket.emit('user register', $('#chatname').val(), function(data){
         $('#messages').append($('<li class="red">').text(data));
+        // $('#myModal').modal('show');
+        // $(':input[type="submit"]').prop('disabled', false);
+        // $(':input[type="text"]').prop('disabled', false);
+        // $('#messagebutton').prop('disabled', true);
+        // $("#chatname").focus();
     });
 
+    $('#myModal').modal('hide');
     $(':input[type="submit"]').prop('disabled', true);
     $(':input[type="text"]').prop('disabled', true);
     $('#messagebutton').prop('disabled', false);
