@@ -9,6 +9,7 @@ var express = require('express');
 
 //own modules
 var register = require('./app/registeruser');
+var whisper1 = require('./app/chatcommands/whisper');
 
 //http server listen on port from environment variable or else port 3000
 http.listen(process.env.PORT || 3000, function(){
@@ -40,39 +41,17 @@ io.on('connection', function(socket){
 
 	//prints message in console when user is disconnecting
 	socket.on('disconnect', function(){
-		//deregister user
-		//clients.splice(clients.indexOf(client), 1);
-		//feedback
-		// users.splice(users.indexOf(socket.username), 1);
 		delete users[socket.username];
-		
 		io.emit('chat message', socket.username + ' has left the chat.');
-
 	});
 
   socket.on('userinput', function(msg, callback){
     //io.emit('chat message', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [John]: '  + msg);
     var whisper = msg.substring(0, 3);
     if (whisper === "/w ") {
-    	msg = msg.substring(3);
-    	var spaceindex = msg.indexOf(" ");
 
-    	if (spaceindex !== -1) {
-    		var receiver = msg.substring(0,spaceindex);
-    		msg = msg.substring(spaceindex + 1);
-
-    		if(receiver in users){
-    			//io.emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
-    			users[receiver].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
-    			users[socket.username].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + ']: ' + msg);
-    			//socket.to(socket.username).emit('hey', 'I just met you');
-    		}else {
-    			callback('user doesn\'t exist');
-    		}
-
-    	}else{
-    		callback('wrong syntax');
-    	}
+      whisper1.whisper(msg, users, socket, callback);
+      
     }else if(msg === '\\list'){
     	//make array in order to only send nescessary information to user instead of object
     	var userlist = [];
