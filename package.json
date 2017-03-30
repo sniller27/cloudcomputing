@@ -2,9 +2,9 @@
   "name": "chat-socket",
   "version": "0.0.1",
   "description": "socket.io app and node.js",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
