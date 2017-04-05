@@ -13,8 +13,6 @@ $(function () {
   //user connects to chat
   $('#connectnameform').submit(function(){
 
-    var samename;
-    
     socket.emit('user register', $('#chatname').val(), function(data){
         $('#messages').append($('<li class="red">').text(data));
         // $('#myModal').modal('show');
