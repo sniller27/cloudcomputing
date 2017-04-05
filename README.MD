@@ -1,4 +1,9 @@
-This is chat client made in is made in Node.js, Express and Socket.io. The chat client allows you to join the chat, send messages, send private messages and see a list of online users.
+This chat client is made in Node.js, Express and Socket.io. The chat client allows you to join the chat, send messages, send private messages and see a list of online users.
+# Chat commands
+
+whisper: /w username message
+list online users: \list
+
 
 # Installation guide
 
