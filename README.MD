@@ -2,6 +2,7 @@ This chat client is made in Node.js, Express and Socket.io. The chat client allo
 # Chat commands
 
 whisper: /w username message
+
 list online users: \list
 
 
