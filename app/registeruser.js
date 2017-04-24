@@ -1,20 +1,20 @@
+//database
+var _mysql = require('mysql');
+var env = process.env.NODE_ENV || 'development';
+var dbconfig = require('../config.js')[env];
+// var config = require('../config.js')[env];
+
 module.exports.registeruser = function(registerparameters, callback, socket, users, io){
 
-var _mysql = require('mysql');
-
-var HOST = 'localhost';
-var PORT = 8080;
-var MYSQL_USER = 'root';
-var MYSQL_PASS = '';
-var DATABASE = 'chatclientdb';
-var TABLE = 'logindata';
-var rowsfound;
+console.log("env: " + env);
+// var db = config.env.database;
+var db = config.development.database;
 
 var connection = _mysql.createConnection({
-  host     : HOST,
-  user     : MYSQL_USER,
-  password : MYSQL_PASS,
-  database : DATABASE
+    host     : db.HOST,
+    user     : db.MYSQL_USER,
+    password : db.MYSQL_PASS,
+    database : db.DATABASE
 });
 
 connection.connect();
@@ -22,7 +22,7 @@ connection.connect();
 connection.query("SELECT * FROM logindata AS solution WHERE username='"+registerparameters.username+"' AND password='"+registerparameters.password+"'", function (error, results, fields) {
   if (error) throw error;
 
-  rowsfound = Object.keys(results).length;
+  var rowsfound = Object.keys(results).length;
 
   if (rowsfound != 0) {
     console.log('correct password!!');

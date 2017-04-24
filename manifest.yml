@@ -1,5 +1,5 @@
 ---
 applications:
- - name: chatclient
+ - name: chatclientrelational
    random-route: true
    memory: 256M
