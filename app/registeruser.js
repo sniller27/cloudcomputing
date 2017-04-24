@@ -1,14 +1,11 @@
 //database
 var _mysql = require('mysql');
 var env = process.env.NODE_ENV || 'development';
-var dbconfig = require('../config.js')[env];
-// var config = require('../config.js')[env];
+var config = require('../config.js')[env];
 
 module.exports.registeruser = function(registerparameters, callback, socket, users, io){
 
-console.log("env: " + env);
-// var db = config.env.database;
-var db = config.development.database;
+var db = config.database;
 
 var connection = _mysql.createConnection({
     host     : db.HOST,
