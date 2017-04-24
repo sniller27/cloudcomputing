@@ -2,6 +2,7 @@
 //onload functionality
 $('#myModal').modal({backdrop: 'static', keyboard: false});
 $('#myModal').modal('show');
+console.log("vis modal");
 $('#messagebutton').prop('disabled', true);
 $('#chatname').focus();
 
@@ -13,24 +14,18 @@ $(function () {
   //user connects to chat
   $('#connectnameform').submit(function(){
 
-  var parameters = { 
-    username: $('#chatname').val(), 
-    password: $('#password').val() 
-  };
+    var parameters = { 
+      username: $('#chatname').val(), 
+      password: $('#password').val() 
+    };
+
     socket.emit('user register', parameters, function(data){
-        $('#messages').append($('<li class="red">').text(data));
-        // $('#myModal').modal('show');
-        // $(':input[type="submit"]').prop('disabled', false);
-        // $(':input[type="text"]').prop('disabled', false);
-        // $('#messagebutton').prop('disabled', true);
-        // $("#chatname").focus();
+
+      $('#loginfeedback').text("Wrong username and password");
+
     });
 
-    $('#myModal').modal('hide');
-    $(':input[type="submit"]').prop('disabled', true);
-    $(':input[type="text"]').prop('disabled', true);
-    $('#messagebutton').prop('disabled', false);
-    $("#messagebutton").focus();
+    
     
     return false;
   });
@@ -44,6 +39,16 @@ $(function () {
 
     $('#messagebutton').val('');
     return false;
+  });
+
+  //append textmessage to chat
+  socket.on('close modal', function(msg){
+    $('#myModal').modal('hide');
+    $(':input[type="submit"]').prop('disabled', true);
+    $(':input[type="text"]').prop('disabled', true);
+    $('#messagebutton').prop('disabled', false);
+    $("#messagebutton").focus();
+    $('#messages').append($('<li class="red">').text(data));
   });
 
   //append textmessage to chat

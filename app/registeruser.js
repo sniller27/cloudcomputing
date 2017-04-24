@@ -31,13 +31,14 @@ connection.query("SELECT * FROM logindata AS solution WHERE username='"+register
     //saves corresponding socket in users object
     users[socket.username] = socket;
     //returns data
+    io.emit('close modal', socket.username + ' has joined the chat.');
     io.emit('chat message', socket.username + ' has joined the chat.');
 
   }else{
     console.log("wrong");
     callback(false);
   }
-  
+
 });
 
   
