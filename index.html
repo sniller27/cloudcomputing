@@ -17,8 +17,7 @@
           <!-- Modal content-->
           <div class="modal-content">
             <!-- chat name form -->
-            <form action="" id="connectnameform">
-<p>olledolle</p>
+            <form method="post" action="/signup" id="connectnameform">
               <div class="modal-header">
                 <h4 class="modal-title">Welcome to the chat</h4>
               </div>
@@ -29,8 +28,11 @@
                   <input type="text" name="chatname" id="chatname" required>
                   <br>
                   <br>
-                  <label for="passsword">password: </label>
+                  <label for="password">password: </label>
                   <input type="text" name="password" id="password" required>
+                  <br>
+                  <br>
+                  <a href="/signup">sign up</a>
               </div>
 
               <div class="modal-footer">
@@ -53,4 +55,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
     <script src="chatview"></script>
+
+  </body>
 </html>
