@@ -41,7 +41,7 @@ connection.query("SELECT * FROM logindata AS solution WHERE username='"+register
 
 });
 
-  
+connection.end();
 
   // if(registerparameters in users){
   //   // doesnt work
