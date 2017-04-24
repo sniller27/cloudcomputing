@@ -30,6 +30,39 @@ server.listen(process.env.PORT || 3000, function(){
 });
 
 /** ---------------------------------------- **/
+// DATABASE
+var _mysql = require('mysql');
+
+var HOST = 'localhost';
+var PORT = 8080;
+var MYSQL_USER = 'root';
+var MYSQL_PASS = '';
+var DATABASE = 'chatclientdb';
+var TABLE = 'logindata';
+
+var connection = _mysql.createConnection({
+  host     : HOST,
+  user     : MYSQL_USER,
+  password : MYSQL_PASS,
+  database : DATABASE
+});
+
+connection.connect();
+
+connection.query("SELECT * FROM logindata AS solution WHERE username='bo' AND password='lol'", function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results);
+});
+
+// var mysql = _mysql.createClient({
+//     host: HOST,
+//     port: PORT,
+//     user: MYSQL_USER,
+//     password: MYSQL_PASS,
+// });
+
+// mysql.query('use ' + DATABASE);
+/** ---------------------------------------- **/
 
 // using Express middleware for serving static files (the first URL is in application the other is the actual URL)
 app.use('/style', express.static('stylesheets/style.css'));

@@ -13,7 +13,11 @@ $(function () {
   //user connects to chat
   $('#connectnameform').submit(function(){
 
-    socket.emit('user register', $('#chatname').val(), function(data){
+  var parameters = { 
+    username: $('#chatname').val(), 
+    password: $('#password').val() 
+  };
+    socket.emit('user register', parameters, function(data){
         $('#messages').append($('<li class="red">').text(data));
         // $('#myModal').modal('show');
         // $(':input[type="submit"]').prop('disabled', false);
