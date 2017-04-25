@@ -1,6 +1,7 @@
-//database
-var _mysql = require('mysql');
+//environment check
 var env = process.env.NODE_ENV || 'development';
+//database modules
+var _mysql = require('mysql');
 var config = require('../config.js')[env];
 
 module.exports.registeruser = function(registerparameters, callback, socket, users, io){
@@ -23,6 +24,9 @@ connection.query("SELECT * FROM logindata AS solution WHERE username='"+register
 
   if (rowsfound != 0) {
     console.log('correct password!!');
+
+    
+
     // saves chat name to socket
     socket.username = registerparameters.username;
     //saves corresponding socket in users object
