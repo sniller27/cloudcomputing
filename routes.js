@@ -10,6 +10,8 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var _mysql = require('mysql');
 var env = process.env.NODE_ENV || 'development';
 var config = require('./config.js')[env];
+//password hashing module
+var bcrypt = require('bcrypt');
 
 //route handler "/" is called when we go to URL (get makes request for "/")
 router.get('/', function(req, res){
@@ -24,25 +26,29 @@ router.get('/', function(req, res){
 //post form for sign up
 router.post('/signup', urlencodedParser, function (req, res) {
 	
-	console.log(req.body);
+	//set salt and generate hash
+	const saltRounds = 10;
 
-	var db = config.database;
+	//sql insert inside to ensure everything getting called after the hash is made
+	bcrypt.hash(req.body.signuppassword, saltRounds, function(err, hash) {
+		console.log(req.body);
 
-	var connection = _mysql.createConnection({
-	    host     : db.HOST,
-	    user     : db.MYSQL_USER,
-	    password : db.MYSQL_PASS,
-	    database : db.DATABASE
+		var db = config.database;
+
+		var connection = _mysql.createConnection({
+		    host     : db.HOST,
+		    user     : db.MYSQL_USER,
+		    password : db.MYSQL_PASS,
+		    database : db.DATABASE
+		});
+
+		connection.connect();
+
+			connection.query("INSERT INTO `logindata`(`id`, `username`, `password`) VALUES (null, '"+req.body.signupusername+"', '"+hash+"')", function (error, results, fields) {
+			});
+
+		connection.end();
 	});
-
-	connection.connect();
-
-	connection.query("INSERT INTO `logindata`(`id`, `username`, `password`) VALUES (null, '"+req.body.signupusername+"', '"+req.body.signuppassword+"')", function (error, results, fields) {
-
-
-	});
-
-	connection.end();
 
 	//after
 	if (!req.body) return res.sendStatus(400)

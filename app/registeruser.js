@@ -3,6 +3,8 @@ var env = process.env.NODE_ENV || 'development';
 //database modules
 var _mysql = require('mysql');
 var config = require('../config.js')[env];
+//password hashing module
+var bcrypt = require('bcrypt');
 
 module.exports.registeruser = function(registerparameters, callback, socket, users, io){
 
@@ -17,29 +19,37 @@ var connection = _mysql.createConnection({
 
 connection.connect();
 
-connection.query("SELECT * FROM logindata AS solution WHERE username='"+registerparameters.username+"' AND password='"+registerparameters.password+"'", function (error, results, fields) {
+connection.query("SELECT * FROM logindata AS solution WHERE username='"+registerparameters.username+"'", function (error, results, fields) {
   if (error) throw error;
-
   var rowsfound = Object.keys(results).length;
 
   if (rowsfound != 0) {
-    console.log('correct password!!');
 
-    
+    var hash = results[0].password;
+    bcrypt.compare(registerparameters.password, hash, function(err, res) {
+        // res == true 
+        if (res) {
 
-    // saves chat name to socket
-    socket.username = registerparameters.username;
-    //saves corresponding socket in users object
-    users[socket.username] = socket;
-    //returns data
-    io.emit('close modal', socket.username + ' has joined the chat.');
-    io.emit('chat message', socket.username + ' has joined the chat.');
+            console.log('correct password!!');
 
-  }else{
+            // saves chat name to socket
+            socket.username = registerparameters.username;
+            //saves corresponding socket in users object
+            users[socket.username] = socket;
+            //returns data
+            io.emit('close modal', socket.username + ' has joined the chat.');
+            io.emit('chat message', socket.username + ' has joined the chat.');
+
+        }else {
+          console.log("wrong");
+          callback(false);
+        }
+    });
+
+  }else {
     console.log("wrong");
     callback(false);
   }
-
 });
 
 connection.end();
