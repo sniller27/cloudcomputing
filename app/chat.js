@@ -6,6 +6,8 @@ var deregister = require('./deregisteruser');
 var normalmessage = require('./chatcommands/normalmessage');
 var whisper = require('./chatcommands/whisper');
 var userlist = require('./chatcommands/userlist');
+//sanitizer
+var sanitizer = require('sanitizer');
 
 
 //object for storing users data
@@ -30,17 +32,19 @@ module.exports.chat = function(io){
 
     socket.on('userinput', function(msg, callback){
 
-      var detectwhisper = msg.substring(0, 3);
+      var msgsan = sanitizer.escape(msg);
+
+      var detectwhisper = msgsan.substring(0, 3);
       if (detectwhisper === "/w ") {
 
-        whisper.whisper(msg, users, socket, callback);
+        whisper.whisper(msgsan, users, socket, callback);
 
-      }else if(msg === '\\list'){
+      }else if(msgsan === '\\list'){
 
         userlist.userlist(users, socket);
 
       }else{
-        normalmessage.normalmessage(io, socket, msg);
+        normalmessage.normalmessage(io, socket, msgsan);
       }
 
     });

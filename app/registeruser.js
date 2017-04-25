@@ -5,8 +5,17 @@ var _mysql = require('mysql');
 var config = require('../config.js')[env];
 //password hashing module
 var bcrypt = require('bcrypt');
+//sanitizer
+var sanitizer = require('sanitizer');
 
 module.exports.registeruser = function(registerparameters, callback, socket, users, io){
+
+//sanitize
+var username = sanitizer.escape(registerparameters.username);
+var userpassword = sanitizer.escape(registerparameters.password);
+
+console.log(username);
+console.log(userpassword);
 
 var db = config.database;
 
@@ -19,21 +28,21 @@ var connection = _mysql.createConnection({
 
 connection.connect();
 
-connection.query("SELECT * FROM logindata AS solution WHERE username='"+registerparameters.username+"'", function (error, results, fields) {
+connection.query("SELECT * FROM logindata AS solution WHERE username='"+username+"'", function (error, results, fields) {
   if (error) throw error;
   var rowsfound = Object.keys(results).length;
 
   if (rowsfound != 0) {
 
     var hash = results[0].password;
-    bcrypt.compare(registerparameters.password, hash, function(err, res) {
+    bcrypt.compare(userpassword, hash, function(err, res) {
         // res == true 
         if (res) {
 
             console.log('correct password!!');
 
             // saves chat name to socket
-            socket.username = registerparameters.username;
+            socket.username = username;
             //saves corresponding socket in users object
             users[socket.username] = socket;
             //returns data
@@ -60,7 +69,7 @@ connection.end();
   //   //io.emit('chat message', 'username already exists');
   // }else {
   //   // saves chat name to socket
-  //   socket.username = registerparameters.username;
+  //   socket.username = username;
   //   //saves corresponding socket in users object
   //   users[socket.username] = socket;
   //   //returns data

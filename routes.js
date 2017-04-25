@@ -12,6 +12,8 @@ var env = process.env.NODE_ENV || 'development';
 var config = require('./config.js')[env];
 //password hashing module
 var bcrypt = require('bcrypt');
+//sanitizer
+var sanitizer = require('sanitizer');
 
 //route handler "/" is called when we go to URL (get makes request for "/")
 router.get('/', function(req, res){
@@ -25,12 +27,16 @@ router.get('/', function(req, res){
 
 //post form for sign up
 router.post('/signup', urlencodedParser, function (req, res) {
+
+	//sanitize
+	var username = sanitizer.escape(req.body.signupusername);
+	var userpassword = sanitizer.escape(req.body.signuppassword);
 	
 	//set salt and generate hash
 	const saltRounds = 10;
 
 	//sql insert inside to ensure everything getting called after the hash is made
-	bcrypt.hash(req.body.signuppassword, saltRounds, function(err, hash) {
+	bcrypt.hash(userpassword, saltRounds, function(err, hash) {
 		console.log(req.body);
 
 		var db = config.database;
@@ -44,7 +50,7 @@ router.post('/signup', urlencodedParser, function (req, res) {
 
 		connection.connect();
 
-			connection.query("INSERT INTO `logindata`(`id`, `username`, `password`) VALUES (null, '"+req.body.signupusername+"', '"+hash+"')", function (error, results, fields) {
+			connection.query("INSERT INTO `logindata`(`id`, `username`, `password`) VALUES (null, '"+username+"', '"+hash+"')", function (error, results, fields) {
 			});
 
 		connection.end();
@@ -52,7 +58,7 @@ router.post('/signup', urlencodedParser, function (req, res) {
 
 	//after
 	if (!req.body) return res.sendStatus(400)
-	res.send('welcome, ' + req.body.signupusername)
+	res.send('welcome, ' + username)
 })
 	
 
