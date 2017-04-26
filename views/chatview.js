@@ -20,8 +20,16 @@ $(function () {
     };
 
     socket.emit('user register', parameters, function(data){
-
-      $('#loginfeedback').text("Wrong username and password");
+      if(data){
+        console.log(data);
+        $('#myModal').modal('hide');
+        $(':input[type="submit"]').prop('disabled', true);
+        $(':input[type="text"]').prop('disabled', true);
+        $('#messagebutton').prop('disabled', false);
+        $("#messagebutton").focus();
+      }else {
+        $('#loginfeedback').text("Wrong username and password");
+      }
 
     });
 
@@ -39,16 +47,6 @@ $(function () {
 
     $('#messagebutton').val('');
     return false;
-  });
-
-  //append textmessage to chat
-  socket.on('close modal', function(msg){
-    $('#myModal').modal('hide');
-    $(':input[type="submit"]').prop('disabled', true);
-    $(':input[type="text"]').prop('disabled', true);
-    $('#messagebutton').prop('disabled', false);
-    $("#messagebutton").focus();
-    $('#messages').append($('<li class="red">').text(data));
   });
 
   //append textmessage to chat

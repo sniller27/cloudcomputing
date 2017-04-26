@@ -45,10 +45,10 @@ connection.query("SELECT * FROM logindata AS solution WHERE username='"+username
             socket.username = username;
             //saves corresponding socket in users object
             users[socket.username] = socket;
+            console.log(username + " tilføjet");
             //returns data
-            io.emit('close modal', socket.username + ' has joined the chat.');
             io.emit('chat message', socket.username + ' has joined the chat.');
-
+            callback(true);
         }else {
           console.log("wrong");
           callback(false);

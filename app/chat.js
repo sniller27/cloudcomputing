@@ -13,7 +13,6 @@ var sanitizer = require('sanitizer');
 //object for storing users data
 var users = {};
 
-
 module.exports.chat = function(io){
 
   io.on('connection', function(socket){
@@ -27,7 +26,9 @@ module.exports.chat = function(io){
 
     //prints message in console when user is disconnecting
     socket.on('disconnect', function(){
-      deregister.deregisteruser(io, socket, users);
+
+        deregister.deregisteruser(io, socket, users);
+
     });
 
     socket.on('userinput', function(msg, callback){
