@@ -11,6 +11,10 @@ $(function () {
   //no URL in io() specified, since it defaults to trying to connect to the host that serves the page
   var socket = io();
 
+  function scrollToBot(){
+   $("html, body").animate({ scrollTop: $(document).height() }, 0); 
+  }
+
   //user connects to chat
   $('#connectnameform').submit(function(){
 
@@ -43,20 +47,24 @@ $(function () {
 
       socket.emit('userinput', $('#messagebutton').val(), function(data){
         $('#messages').append($('<li class="red">').text(data));
+        scrollToBot();
       });
 
     $('#messagebutton').val('');
+
     return false;
   });
 
   //append textmessage to chat
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
+    scrollToBot();
   });
 
   //whisper
   socket.on('whisper', function(msg){
     $('#messages').append($('<li class="green">').text(msg));
+    scrollToBot();
   });
 
   //getting users list
@@ -71,6 +79,7 @@ $(function () {
 
     //appends all at once
     $('#messages').append(allusers);
+    scrollToBot();
   });
 
 });
