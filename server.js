@@ -55,15 +55,20 @@ app.use('/signup', express.static('views/signup.html'));
 /**
 	HTTPS redirect
 **/
-function requireHTTPS(req, res, next) {
-    if (!req.secure) {
-        //FYI this should work for local development as well
-        return res.redirect('https://' + req.get('host') + req.url);
-    }
-    next();
-}
-
-app.use(requireHTTPS);
+// var https_redirect = function () {
+//   return function(req, res, next) {
+//     if (req.secure) {
+//       if(env === 'development') {
+//         return res.redirect('https://localhost:3000' + req.url);
+//       } else {
+//         return res.redirect('https://' + req.headers.host + req.url);
+//       }
+//     } else {
+//       return next();
+//     }
+//   };
+// };
+// app.use(https_redirect());
 
 //apply routes to application
 app.use('/', routes);
