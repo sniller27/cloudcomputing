@@ -55,19 +55,19 @@ app.use('/signup', express.static('views/signup.html'));
 /**
 	HTTPS redirect
 **/
-var forceHTTPS = function () {
-  return function(req, res, next) {
-    if (!req.secure) {
-      if (app.get('env') === 'development') {
-         return res.redirect('https://localhost:3001' + req.url);
-      } else {
-        return res.redirect('https://' + req.headers.host + req.url);
-      }
-    } else {
-      return next();
-    }
-  };
-};
+// var forceHTTPS = function () {
+//   return function(req, res, next) {
+//     if (!req.secure) {
+//       if (app.get('env') === 'development') {
+//          return res.redirect('https://localhost:3001' + req.url);
+//       } else {
+//         return res.redirect('https://' + req.headers.host + req.url);
+//       }
+//     } else {
+//       return next();
+//     }
+//   };
+// };
 
 //apply routes to application
 app.use('/', routes);
