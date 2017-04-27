@@ -1,6 +1,3 @@
-/**
-	ROUTES (moved from server.js)
-**/
 var express = require('express');
 var router = express.Router();
 //modules for post form
@@ -50,17 +47,36 @@ router.post('/signup', urlencodedParser, function (req, res) {
 
 		connection.connect();
 
-			connection.query("INSERT INTO `logindata`(`id`, `username`, `password`) VALUES (null, '"+username+"', '"+hash+"')", function (error, results, fields) {
-			});
+		//check if user exists
+		connection.query("SELECT * FROM logindata AS solution WHERE username='"+username+"'", function (error, results, fields) {
+			if (error) throw error;
+			var rowsfound = Object.keys(results).length;
 
+			if (rowsfound != 0) {
+				res.sendFile(__dirname + '/views/signup.html');
+				console.log('user already exists');
+			}else {
+				var db = config.database;
+
+				var connection = _mysql.createConnection({
+					host     : db.HOST,
+					user     : db.MYSQL_USER,
+					password : db.MYSQL_PASS,
+					database : db.DATABASE
+				});
+
+				connection.connect();
+				//insert user
+				connection.query("INSERT INTO `logindata`(`id`, `username`, `password`) VALUES (null, '"+username+"', '"+hash+"')", function (error, results, fields) {
+					if (!req.body) return res.sendStatus(400)
+					res.send('welcome, ' + username)
+				});
+				connection.end();
+			}
+		});
 		connection.end();
 	});
-
-	//after
-	if (!req.body) return res.sendStatus(400)
-	res.send('welcome, ' + username)
 })
-	
 
 module.exports = router;
 

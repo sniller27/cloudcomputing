@@ -52,76 +52,14 @@ app.use('/style', express.static('stylesheets/style.css'));
 app.use('/chatview', express.static('views/chatview.js'));
 app.use('/signup', express.static('views/signup.html'));
 
-
-/**
-	SESSIONS
-**/
-var db = config.database;
-
-var options = {
-    host: db.HOST,
-    port: 3306,
-    user: db.MYSQL_USER,
-    password: db.MYSQL_PASS,
-    database: db.DATABASE
-};
- 
-var sessionStore = new MySQLStore(options);
-
-app.use(session({
-    key: 'session_cookie_name',
-    secret: 'session_cookie_secret',
-    store: sessionStore,
-    resave: true,
-    saveUninitialized: true
-}));
-
-// /**
-// 	ROUTES
-// **/
-// //route handler "/" is called when we go to URL (get makes request for "/")
-// router.get('/', function(req, res){
-// 	//express: res.send('<h1>Hello world</h1>');   //node: res.write('<h1>Hello world</h1>');
-// 	res.sendFile(__dirname + '/index.html');
-
-// });
-
-// //post form for sign up
-// router.post('/signup', urlencodedParser, function (req, res) {
-	
-// 	console.log(req.body);
-
-// 	var db = config.database;
-
-// 	var connection = _mysql.createConnection({
-// 	    host     : db.HOST,
-// 	    user     : db.MYSQL_USER,
-// 	    password : db.MYSQL_PASS,
-// 	    database : db.DATABASE
-// 	});
-
-// 	connection.connect();
-
-// 	connection.query("INSERT INTO `logindata`(`id`, `username`, `password`) VALUES (null, '"+req.body.signupusername+"', '"+req.body.signuppassword+"')", function (error, results, fields) {
-
-
-// 	});
-
-// 	connection.end();
-
-// 	//after
-// 	if (!req.body) return res.sendStatus(400)
-// 	res.send('welcome, ' + req.body.signupusername)
-// })
-
 /**
 	HTTPS redirect
 **/
-if (env == 'production') {
-	app.get('*',function(req,res){  
-	    res.redirect('https://chatclientdb.eu-gb.mybluemix.net'+req.url)
-	})
-}
+// if (env == 'production') {
+// 	app.get('*',function(req,res){  
+// 	    res.redirect('https://chatclientdb.eu-gb.mybluemix.net'+req.url)
+// 	})
+// }
 
 //apply routes to application
 app.use('/', routes);

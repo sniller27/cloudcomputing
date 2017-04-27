@@ -10,70 +10,63 @@ var sanitizer = require('sanitizer');
 
 module.exports.registeruser = function(registerparameters, callback, socket, users, io){
 
-//sanitize
-var username = sanitizer.escape(registerparameters.username);
-var userpassword = sanitizer.escape(registerparameters.password);
+  //sanitize
+  var username = sanitizer.escape(registerparameters.username);
+  var userpassword = sanitizer.escape(registerparameters.password);
 
-console.log(username);
-console.log(userpassword);
+  //connect to database
+  var db = config.database;
 
-var db = config.database;
+  var connection = _mysql.createConnection({
+      host     : db.HOST,
+      user     : db.MYSQL_USER,
+      password : db.MYSQL_PASS,
+      database : db.DATABASE
+  });
 
-var connection = _mysql.createConnection({
-    host     : db.HOST,
-    user     : db.MYSQL_USER,
-    password : db.MYSQL_PASS,
-    database : db.DATABASE
-});
+  connection.connect();
 
-connection.connect();
+  connection.query("SELECT * FROM logindata AS solution WHERE username='"+username+"'", function (error, results, fields) {
+    if (error) throw error;
+    var rowsfound = Object.keys(results).length;
 
-connection.query("SELECT * FROM logindata AS solution WHERE username='"+username+"'", function (error, results, fields) {
-  if (error) throw error;
-  var rowsfound = Object.keys(results).length;
+    if (rowsfound != 0) {
 
-  if (rowsfound != 0) {
+      var hash = results[0].password;
+      bcrypt.compare(userpassword, hash, function(err, res) {
+          if (res) {
 
-    var hash = results[0].password;
-    bcrypt.compare(userpassword, hash, function(err, res) {
-        // res == true 
-        if (res) {
+              var checknametaken = false;
+              //check if username is in use
+              for (var key in users) {
+                if (users[key].username == username) {
+                  checknametaken = true;
+                }
+              }
 
-            console.log('correct password!!');
+              if (checknametaken) {
+                console.log('allerede taget');
+                callback('taken');
+              }else {
+                // saves chat name to socket
+                socket.username = username;
+                //saves corresponding socket in users object
+                users[socket.username] = socket;
+                
+                //returns data
+                io.emit('chat message', socket.username + ' has joined the chat.');
+                callback(true);
+              }
+          }else {
+            callback(false);
+          }
+      });
 
-            // saves chat name to socket
-            socket.username = username;
-            //saves corresponding socket in users object
-            users[socket.username] = socket;
-            console.log(username + " tilføjet");
-            //returns data
-            io.emit('chat message', socket.username + ' has joined the chat.');
-            callback(true);
-        }else {
-          console.log("wrong");
-          callback(false);
-        }
-    });
+    }else {
+      callback(false);
+    }
+  });
 
-  }else {
-    console.log("wrong");
-    callback(false);
-  }
-});
-
-connection.end();
-
-  // if(registerparameters in users){
-  //   // doesnt work
-  //   callback(false);
-  //   //io.emit('chat message', 'username already exists');
-  // }else {
-  //   // saves chat name to socket
-  //   socket.username = username;
-  //   //saves corresponding socket in users object
-  //   users[socket.username] = socket;
-  //   //returns data
-  //   io.emit('chat message', socket.username + ' has joined the chat.');
-  // }
+  connection.end();
 
 }

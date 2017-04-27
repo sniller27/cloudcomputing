@@ -24,21 +24,20 @@ $(function () {
     };
 
     socket.emit('user register', parameters, function(data){
-      if(data){
-        console.log(data);
+      if(data == true){
         $('#myModal').modal('hide');
         $(':input[type="submit"]').prop('disabled', true);
         $(':input[type="text"]').prop('disabled', true);
         $('#messagebutton').prop('disabled', false);
         $("#messagebutton").focus();
-      }else {
+      }else if(data == false) {
         $('#loginfeedback').text("Wrong username and password");
+      }else if(data == 'taken') {
+        $('#loginfeedback').text("Someone is already logged in with that username");
       }
 
     });
 
-    
-    
     return false;
   });
 

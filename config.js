@@ -1,36 +1,5 @@
 config = {
 
-	// var _mysql = require('mysql');
-
-	 // HOST : 'us-cdbr-iron-east-03.cleardb.net',
-	 // PORT : 8080,
-	 // MYSQL_USER : 'b184b3354efb4f',
-	 // MYSQL_PASS : 'b1a8dab4',
-	 // DATABASE : 'ad_792424820412a5f',
-	 // TABLE : 'logindata'
-
-	// var connection = _mysql.createConnection({
-	//   host     : HOST,
-	//   user     : MYSQL_USER,
-	//   password : MYSQL_PASS,
-	//   database : DATABASE
-	// });
-	// database:{
-	// 	 HOST : 'localhost',
-	// 	 PORT : 8080,
-	// 	 MYSQL_USER : 'root',
-	// 	 MYSQL_PASS : '',
-	// 	 DATABASE : 'chatclientdb',
-	// 	 TABLE : 'logindata'
-	// }
-
-	// var connection = _mysql.createConnection({
-	//   host     : HOST,
-	//   user     : MYSQL_USER,
-	//   password : MYSQL_PASS,
-	//   database : DATABASE
-	// });
-
 	development: {
 
 	    database:{
@@ -53,6 +22,7 @@ config = {
 			DATABASE : 'ad_792424820412a5f',
 			TABLE : 'logindata'
 	    }
+	    
 	}
 
 }
