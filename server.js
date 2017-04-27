@@ -55,11 +55,15 @@ app.use('/signup', express.static('views/signup.html'));
 /**
 	HTTPS redirect
 **/
-// if (env == 'production') {
-// 	app.get('*',function(req,res){  
-// 	    res.redirect('https://chatclientdb.eu-gb.mybluemix.net'+req.url)
-// 	})
-// }
+function requireHTTPS(req, res, next) {
+    if (!req.secure) {
+        //FYI this should work for local development as well
+        return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+}
+
+app.use(requireHTTPS);
 
 //apply routes to application
 app.use('/', routes);
