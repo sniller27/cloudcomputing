@@ -114,6 +114,15 @@ app.use(session({
 // 	res.send('welcome, ' + req.body.signupusername)
 // })
 
+/**
+	HTTPS redirect
+**/
+if (env == 'production') {
+	app.get('*',function(req,res){  
+	    res.redirect('https://chatclientdb.eu-gb.mybluemix.net'+req.url)
+	})
+}
+
 //apply routes to application
 app.use('/', routes);
 
