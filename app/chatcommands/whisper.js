@@ -8,8 +8,12 @@ module.exports.whisper = function(msg, users, socket, callback){
     msg = msg.substring(spaceindex + 1);
 
     if(receiver in users){
-      users[receiver].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' from [' + socket.username + ']: ' + msg);
-      users[socket.username].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + '] -->' + ' [' + receiver + ']: ' + msg);
+      if (socket.username == receiver) {
+        callback('you can\'t whisp to yourself');
+      }else {
+        users[receiver].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' from [' + socket.username + ']: ' + msg);
+        users[socket.username].emit('whisper', new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' [' + socket.username + '] -->' + ' [' + receiver + ']: ' + msg);
+      }
     }else {
       callback('user doesn\'t exist');
     }

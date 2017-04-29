@@ -20,26 +20,56 @@
 var express = require('express');
 var http = require('http');
 var app = express();
+var router = express.Router();
 var server = http.createServer(app);
 
+//db modules
+var _mysql = require('mysql');
+var env = process.env.NODE_ENV || 'development';
+var config = require('./config.js')[env];
+//session modules
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+//socket io and chat module
 var io = require('socket.io')(server);
 var chat = require('./app/chat');
+
+var routes = require('./routes.js');
+
+/**
+	PORT LISTEN
+**/
 
 server.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000');
 });
 
-/** ---------------------------------------- **/
-
+/**
+	BIND MIDDLEWARE
+**/
 // using Express middleware for serving static files (the first URL is in application the other is the actual URL)
 app.use('/style', express.static('stylesheets/style.css'));
 app.use('/chatview', express.static('views/chatview.js'));
+app.use('/signup', express.static('views/signup.html'));
 
-//route handler "/" is called when we go to URL (get makes request for "/")
-app.get('/', function(req, res){
-	//express: res.send('<h1>Hello world</h1>');   //node: res.write('<h1>Hello world</h1>');
-	res.sendFile(__dirname + '/index.html');
+/**
+	HTTPS redirect
+**/
+// var forceHTTPS = function () {
+//   return function(req, res, next) {
+//     if (!req.secure) {
+//       if (app.get('env') === 'development') {
+//          return res.redirect('https://localhost:3001' + req.url);
+//       } else {
+//         return res.redirect('https://' + req.headers.host + req.url);
+//       }
+//     } else {
+//       return next();
+//     }
+//   };
+// };
 
-});
+//apply routes to application
+app.use('/', routes);
 
 chat.chat(io);
