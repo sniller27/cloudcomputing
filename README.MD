@@ -1,4 +1,4 @@
-**See the Wiki for information about branches.**
+**See the Wiki for information about branches.** 
 
 This chat client is made in Node.js, Express and Socket.io. The chat client allows you to join the chat, send messages, send private messages and see a list of online users. In order to use the chat you must sign up in the application and login. This application uses different services from IBM Bluemix.
 
