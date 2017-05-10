@@ -23,4 +23,4 @@ $ npm install
 $ node server.js
 ```
 
-An example of the chat client can be found here: https://chatclientdb.eu-gb.mybluemix.net/
+An example of the chat client can be found here: https://qiu-test3-unrecognizing-innovation.mybluemix.net/

@@ -50,8 +50,9 @@ server.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000');
 });
 
-var services = JSON.parse(process.env.VCAP_SERVICES || "{}");
-console.log("here is: " + services);
+var vcapvar = JSON.parse(process.env.VCAP_SERVICES || "{}");
+var services2 = process.env.VCAP_SERVICES;
+console.log("here is: " + services2);
 /** 
 	REDIS
 **/
@@ -59,9 +60,9 @@ console.log("here is: " + services);
 var redis = require("redis");
 var RedisStore = require('connect-redis')(expressSession);
 // Redis client with VCAP_SERVICES values for port, host and password
-// var redisClient = redis.createClient(/* port value from VCAP_SERVICES goes here */, 
-//                                      (/* host value from VCAP_SERVICES goes here */);
-// redisClient.auth(/* password from  VCAP_SERVICES goes here */);
+var redisClient = redis.createClient(vcapvar.rediscloud[0].credentials.port, 
+                                     vcapvar.rediscloud[0].credentials.hostname);
+redisClient.auth(vcapvar.rediscloud[0].credentials.password);
 
 
 
@@ -76,7 +77,7 @@ app.use('/signup', express.static('views/signup.html'));
 //REDIS USE
 app.use(cookieParser());
 // Use Redis as store and default cookie name
-// app.use(expressSession({secret: 'keyboard cat', store: new RedisStore({ client: redisClient})}));
+app.use(expressSession({secret: 'secretpassword', store: new RedisStore({ client: redisClient})}));
 
 
 /**
