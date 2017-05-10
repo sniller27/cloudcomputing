@@ -27,9 +27,15 @@ var server = http.createServer(app);
 var _mysql = require('mysql');
 var env = process.env.NODE_ENV || 'development';
 var config = require('./config.js')[env];
-//session modules
-var session = require('express-session');
-var MySQLStore = require('express-mysql-session')(session);
+//session modules (not working atm)
+// var session = require('express-session');
+// var MySQLStore = require('express-mysql-session')(session);
+
+// Need cookieParser and expressSession for session support
+var expressSession = require('express-session');
+var cookieParser = require('cookie-parser');
+ 
+
 //socket io and chat module
 var io = require('socket.io')(server);
 var chat = require('./app/chat');
@@ -44,6 +50,21 @@ server.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000');
 });
 
+var services = JSON.parse(process.env.VCAP_SERVICES || "{}");
+console.log("here is: " + services);
+/** 
+	REDIS
+**/
+// Redis session store
+var redis = require("redis");
+var RedisStore = require('connect-redis')(expressSession);
+// Redis client with VCAP_SERVICES values for port, host and password
+// var redisClient = redis.createClient(/* port value from VCAP_SERVICES goes here */, 
+//                                      (/* host value from VCAP_SERVICES goes here */);
+// redisClient.auth(/* password from  VCAP_SERVICES goes here */);
+
+
+
 /**
 	BIND MIDDLEWARE
 **/
@@ -51,6 +72,12 @@ server.listen(process.env.PORT || 3000, function(){
 app.use('/style', express.static('stylesheets/style.css'));
 app.use('/chatview', express.static('views/chatview.js'));
 app.use('/signup', express.static('views/signup.html'));
+
+//REDIS USE
+app.use(cookieParser());
+// Use Redis as store and default cookie name
+// app.use(expressSession({secret: 'keyboard cat', store: new RedisStore({ client: redisClient})}));
+
 
 /**
 	HTTPS redirect
